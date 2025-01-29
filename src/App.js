@@ -12,7 +12,7 @@ import SignUp from './components/auth/SignUp'
 import SignIn from './components/auth/SignIn'
 import SignOut from './components/auth/SignOut'
 import ChangePassword from './components/auth/ChangePassword'
-
+import FoodList from './components/FoodList'
 const App = () => {
 
   const [user, setUser] = useState(null)
@@ -79,7 +79,10 @@ const App = () => {
 						deleteAlert={deleteAlert}
 					/>
 				))}
+				<h1>Food Items</h1>
+            	<FoodList />
 			</Fragment>
+			
 		)
 }
 
