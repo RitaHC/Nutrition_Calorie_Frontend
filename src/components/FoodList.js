@@ -76,17 +76,18 @@ const FoodList = () => {
                 <Modal.Body>
                     {selectedFood && (
                         <>
-                            <h4>{selectedFood.name}</h4>
-                            <p><strong>Serving Size:</strong> {selectedFood.serving_size_g} g </p>
+                            <h4 style={{color: `#${Math.floor(Math.random()*16777215).toString(16)}` }}>{selectedFood.name.toUpperCase()}</h4>
+                            <p></p>
+                            <p><strong>Serving Size:</strong > {selectedFood.serving_size_g} g </p>
                             <p><strong>Calories:</strong> {selectedFood.calories} kcal</p>
                             <p><strong>Protein (in g):</strong> {selectedFood.protein_g}</p>
                             <p><strong>Carbohydrates (in g):</strong> {selectedFood.carbohydrates_total_g}</p>
                             <p><strong>Fat (in g):</strong> {selectedFood.fat_total_g}</p>
                             <p><strong>Fiber (in g):</strong> {selectedFood.fiber_g}</p>
-                            <p><strong>Potassium (in g):</strong> {selectedFood.potassium_mg}</p>
                             <p><strong>Sugar (in g):</strong> {selectedFood.sugar_g} </p>
                             <p><strong>Sodium (in g):</strong> {selectedFood.sodium_mg} </p>
-                            <p><strong>Cholestrol (in g):</strong> {selectedFood.cholesterol_mg} </p>
+                            <p><strong>Potassium (in mg):</strong> {selectedFood.potassium_mg}</p>
+                            <p><strong>Cholestrol (in mg):</strong> {selectedFood.cholesterol_mg} </p>
                         </>
                     )}
                 </Modal.Body>
