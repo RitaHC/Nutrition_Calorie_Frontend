@@ -27,6 +27,15 @@ const FoodList = () => {
         setShow(true);
     };
 
+    // Add Colorful Bars to the elements
+        const getBarStyle = (value, color) => ({
+          width: `${Math.min(value, 100)}%`, // Cap width at 100%
+          backgroundColor: color,
+          height: '20px',
+          borderRadius: '5px',
+          margin: '5px 0',
+        });
+
     const handleClose = () => setShow(false);
 
     if (loading) return <p>Loading...</p>;
@@ -80,14 +89,23 @@ const FoodList = () => {
                             <p></p>
                             <p><strong>Serving Size:</strong > {selectedFood.serving_size_g} g </p>
                             <p><strong>Calories:</strong> {selectedFood.calories} kcal</p>
+                            <div style={getBarStyle(selectedFood.calories, 'darkred')}></div>
                             <p><strong>Protein (in g):</strong> {selectedFood.protein_g}</p>
+                            <div style={getBarStyle(selectedFood.protein_g, 'darkgreen')}></div>
                             <p><strong>Carbohydrates (in g):</strong> {selectedFood.carbohydrates_total_g}</p>
+                            <div style={getBarStyle(selectedFood.carbohydrates_total_g, 'aquamarine')}></div>
                             <p><strong>Fat (in g):</strong> {selectedFood.fat_total_g}</p>
+                            <div style={getBarStyle(selectedFood.fat_total_g, 'darkolivegreen')}></div>
                             <p><strong>Fiber (in g):</strong> {selectedFood.fiber_g}</p>
+                            <div style={getBarStyle(selectedFood.fiber_g, 'chartreuse')}></div>
                             <p><strong>Sugar (in g):</strong> {selectedFood.sugar_g} </p>
+                            <div style={getBarStyle(selectedFood.sugar_g, 'lightseagreen')}></div>
                             <p><strong>Sodium (in g):</strong> {selectedFood.sodium_mg} </p>
-                            <p><strong>Potassium (in mg):</strong> {selectedFood.potassium_mg}</p>
-                            <p><strong>Cholestrol (in mg):</strong> {selectedFood.cholesterol_mg} </p>
+                            <div style={getBarStyle(selectedFood.sodium_mg, 'mediumseagreen')}></div>
+                            <p><strong>Potassium (in g):</strong> {selectedFood.potassium_mg * 0.001}</p>
+                            <div style={getBarStyle(selectedFood.potassium_mg * 0.001, 'darkseagreen')}></div>
+                            <p><strong>Cholestrol (in g):</strong> {selectedFood.cholesterol_mg * 0.001} </p>
+                            <div style={getBarStyle(selectedFood.cholesterol_mg * 0.001, 'darkorange')}></div>
                         </>
                     )}
                 </Modal.Body>
