@@ -93,7 +93,7 @@ const FoodList = () => {
                             <p><strong>Protein (in g):</strong> {selectedFood.protein_g}</p>
                             <div style={getBarStyle(selectedFood.protein_g, 'darkgreen')}></div>
                             <p><strong>Carbohydrates (in g):</strong> {selectedFood.carbohydrates_total_g}</p>
-                            <div style={getBarStyle(selectedFood.carbohydrates_total_g, 'aquamarine')}></div>
+                            <div style={getBarStyle(selectedFood.carbohydrates_total_g, 'olivedrab')}></div>
                             <p><strong>Fat (in g):</strong> {selectedFood.fat_total_g}</p>
                             <div style={getBarStyle(selectedFood.fat_total_g, 'darkolivegreen')}></div>
                             <p><strong>Fiber (in g):</strong> {selectedFood.fiber_g}</p>
@@ -101,7 +101,7 @@ const FoodList = () => {
                             <p><strong>Sugar (in g):</strong> {selectedFood.sugar_g} </p>
                             <div style={getBarStyle(selectedFood.sugar_g, 'lightseagreen')}></div>
                             <p><strong>Sodium (in g):</strong> {selectedFood.sodium_mg} </p>
-                            <div style={getBarStyle(selectedFood.sodium_mg, 'mediumseagreen')}></div>
+                            <div style={getBarStyle(selectedFood.sodium_mg, 'mediumvioletred')}></div>
                             <p><strong>Potassium (in g):</strong> {selectedFood.potassium_mg * 0.001}</p>
                             <div style={getBarStyle(selectedFood.potassium_mg * 0.001, 'darkseagreen')}></div>
                             <p><strong>Cholestrol (in g):</strong> {selectedFood.cholesterol_mg * 0.001} </p>
