@@ -8,12 +8,12 @@ const linkStyle = {
 }
 const authenticatedOptions = (
 	<>
-		<Nav.Item>
+		<Nav.Item style={{ marginRight: '15px' }}>
 			<Link to='change-password' style={linkStyle}>
 				Change Password
 			</Link>
 		</Nav.Item>
-		<Nav.Item>
+		<Nav.Item style={{ marginRight: '15px' }}> 
 			<Link to='sign-out' style={linkStyle}>
 				Sign Out
 			</Link>
@@ -23,34 +23,36 @@ const authenticatedOptions = (
 
 const unauthenticatedOptions = (
 	<>
-        <Nav.Item>
-		    <Link to='sign-up' style={linkStyle}>Sign Up</Link>
-        </Nav.Item>
-        <Nav.Item>
-		    <Link to='sign-in' style={linkStyle}>Sign In</Link>
-        </Nav.Item>
+		<Nav.Item style={{ marginRight: '15px' }}>
+			<Link to='sign-up' style={linkStyle}>Sign Up</Link>
+		</Nav.Item>
+		<Nav.Item style={{ marginRight: '15px' }}>
+			<Link to='sign-in' style={linkStyle}>Sign In</Link>
+		</Nav.Item>
+		<Nav.Item style={{ marginRight: '15px' }}>
+			<Link to='calorie-counter' style={linkStyle}>Count Calories</Link>
+		</Nav.Item>
 	</>
-)
+);
 
 const alwaysOptions = (
 	<>
-		<Nav.Link>
-			<Link to='/' style={linkStyle}>
-				Home
-			</Link>
-		</Nav.Link>
+		<Nav.Item style={{ marginRight: '15px' }}>
+			<Link to='/' style={linkStyle}>Home</Link>
+		</Nav.Item>
 	</>
-)
+);
 
 const Header = ({ user }) => (
 	<Navbar bg='primary' variant='dark' expand='md'>
 		<Navbar.Brand>
-            <Link to='/' style={linkStyle}>
-                react-auth-template
-            </Link>
-        </Navbar.Brand>
+			<Link to='/' style={linkStyle}> Calorie & Nutrition </Link>
+		</Navbar.Brand>
+
 		<Navbar.Toggle aria-controls='basic-navbar-nav' />
+
 		<Navbar.Collapse id='basic-navbar-nav'>
+
 			<Nav className='ml-auto'>
 				{user && (
 					<span className='navbar-text mr-2'>Welcome, {user.email}</span>
@@ -59,7 +61,11 @@ const Header = ({ user }) => (
 				{user ? authenticatedOptions : unauthenticatedOptions}
 			</Nav>
 		</Navbar.Collapse>
-	</Navbar>
-)
 
-export default Header
+	</Navbar>
+);
+
+export default Header;
+
+
+

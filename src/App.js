@@ -15,6 +15,7 @@ import SignIn from './components/auth/SignIn'
 import SignOut from './components/auth/SignOut'
 import ChangePassword from './components/auth/ChangePassword'
 import FoodList from './components/FoodList'
+import CalorieCounter from './components/CalorieCounter';
 const App = () => {
 
   const [user, setUser] = useState(null)
@@ -55,21 +56,26 @@ const App = () => {
 						path='/sign-in'
 						element={<SignIn msgAlert={msgAlert} setUser={setUser} />}
 					/>
-          <Route
-            path='/sign-out'
-            element={
-              <RequireAuth user={user}>
-                <SignOut msgAlert={msgAlert} clearUser={clearUser} user={user} />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path='/change-password'
-            element={
-              <RequireAuth user={user}>
-                <ChangePassword msgAlert={msgAlert} user={user} />
-              </RequireAuth>}
-          />
+					
+					<Route
+						path='/sign-out'
+						element={
+						<RequireAuth user={user}>
+						<SignOut msgAlert={msgAlert} clearUser={clearUser} user={user} />
+						</RequireAuth>
+						}
+					/>
+					<Route
+						path='/calorie-counter'
+						element={<CalorieCounter/>}
+					/>
+					<Route
+						path='/change-password'
+						element={
+						<RequireAuth user={user}>
+							<ChangePassword msgAlert={msgAlert} user={user} />
+						</RequireAuth>}
+					/>
 				</Routes>
 				{msgAlerts.map((msgAlert) => (
 					<AutoDismissAlert
@@ -80,9 +86,12 @@ const App = () => {
 						id={msgAlert.id}
 						deleteAlert={deleteAlert}
 					/>
-				))}
+					))}
 				<h1>Food Items</h1>
+				
             	<FoodList />
+				
+
 			</Fragment>
 			
 		)
