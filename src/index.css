@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Add this CSS to your stylesheet */
+.sticky-nutrition {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 20px; /* Adjust this value based on your page layout */
+  overflow: auto;
+  max-height: 90vh; /* Ensures the nutrition section doesn't take more space than the available view height */
+  padding: 15px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  z-index: 10;
+}

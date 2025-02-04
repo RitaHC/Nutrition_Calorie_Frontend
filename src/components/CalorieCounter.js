@@ -63,67 +63,72 @@ const CalorieCounter = () => {
     });
 
     const maxNutritionValue = Math.max(
-        // totalNutrition.calories, 
-        totalNutrition.protein_g, 
-        totalNutrition.carbohydrates_total_g, 
-        totalNutrition.fat_total_g, 
-        totalNutrition.fiber_g, 
-        totalNutrition.sugar_g, 
-        totalNutrition.sodium_mg, 
-        totalNutrition.potassium_mg, 
+        totalNutrition.protein_g,
+        totalNutrition.carbohydrates_total_g,
+        totalNutrition.fat_total_g,
+        totalNutrition.fiber_g,
+        totalNutrition.sugar_g,
+        totalNutrition.sodium_mg,
+        totalNutrition.potassium_mg,
         totalNutrition.cholesterol_mg
-    ) || 1; // Avoid division by zero
+    ) || 1;
 
     if (loading) return <p>Loading...</p>;
 
     return (
-        <Container className="mb-2" style={{ height: '12px' }}>
-            <h4 className="text-center">Total Nutrition Overview</h4>
+        <Container className="mb-2">
+            <Row>
+                {/* Left Side: Food List */}
+                <Col md={6}>
+                    <h2 className="text-center mb-4">Food List</h2>
+                    {foods.map((food, index) => (
+                        index % 3 === 0 && (
+                            <Row key={index} className="py-2 border-bottom">
+                                {[foods[index], foods[index + 1], foods[index + 2]].map((item, idx) =>
+                                    item ? (
+                                        <Col key={idx} xs={4} className="text-center">
+                                            <div>
+                                                <Button variant="outline-warning" onClick={() => updateFoodCount(item, 1)}>
+                                                    {item.name.toUpperCase()}
+                                                </Button>
+                                            </div>
+                                            {selectedFoods[item.name] && (
+                                                <div className="mt-2">
+                                                    <Button variant="outline-danger" size="sm" onClick={() => updateFoodCount(item, -1)}>
+                                                        -
+                                                    </Button>
+                                                    <span className="mx-2">{selectedFoods[item.name]?.count} servings</span>
+                                                    <Button variant="outline-success" size="sm" onClick={() => updateFoodCount(item, 1)}>
+                                                        +
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </Col>
+                                    ) : null
+                                )}
+                            </Row>
+                        )
+                    ))}
+                </Col>
 
-            {/* Progress Bars for Total Nutritional Values */}
-            <div className="my-3">
-                {Object.entries(totalNutrition).map(([key, value]) => (
-                    <div key={key} className="mb-2">
-                        <p className="mb-1"><strong>{key.replace('_', ' ').toUpperCase()}:</strong> {value} {key.includes('mg') ? 'mg' : 'g'}</p>
-                        <ProgressBar 
-                            now={(value / maxNutritionValue) * 100} 
-                            striped variant={getBarColor(key)} 
-                            label={`${Math.round((value / maxNutritionValue) * 100)}%`} 
-                        />
+                {/* Right Side: Total Nutrition Overview (Sticky) */}
+                <Col md={6} className="sticky-nutrition">
+                    <h4 className="text-center">Total Nutrition Overview</h4>
+                    {/* Progress Bars for Total Nutritional Values */}
+                    <div className="my-3">
+                        {Object.entries(totalNutrition).map(([key, value]) => (
+                            <div key={key} className="mb-2">
+                                <p className="mb-1"><strong>{key.replace('_', ' ').toUpperCase()}:</strong> {value} {key.includes('mg') ? 'mg' : 'g'}</p>
+                                <ProgressBar
+                                    now={(value / maxNutritionValue) * 100}
+                                    striped variant={getBarColor(key)}
+                                    label={`${Math.round((value / maxNutritionValue) * 100)}%`}
+                                />
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-
-            <h2 className="text-center mb-4">Food List</h2>
-
-            {foods.map((food, index) => (
-                index % 3 === 0 && (
-                    <Row key={index} className="py-2 border-bottom">
-                        {[foods[index], foods[index + 1], foods[index + 2]].map((item, idx) =>
-                            item ? (
-                                <Col key={idx} xs={4} className="text-center">
-                                    <div>
-                                        <Button variant="outline-warning" onClick={() => updateFoodCount(item, 1)}>
-                                            {item.name.toUpperCase()}
-                                        </Button>
-                                    </div>
-                                    {selectedFoods[item.name] && (
-                                        <div className="mt-2">
-                                            <Button variant="outline-danger" size="sm" onClick={() => updateFoodCount(item, -1)}>
-                                                -
-                                            </Button>
-                                            <span className="mx-2">{selectedFoods[item.name]?.count} servings</span>
-                                            <Button variant="outline-success" size="sm" onClick={() => updateFoodCount(item, 1)}>
-                                                +
-                                            </Button>
-                                        </div>
-                                    )}
-                                </Col>
-                            ) : null
-                        )}
-                    </Row>
-                )
-            ))}
+                </Col>
+            </Row>
         </Container>
     );
 };
@@ -131,7 +136,6 @@ const CalorieCounter = () => {
 // Function to get different colors for each nutrient type
 const getBarColor = (key) => {
     const colors = {
-        // calories: "danger",
         protein_g: "success",
         carbohydrates_total_g: "primary",
         fat_total_g: "warning",
@@ -145,4 +149,3 @@ const getBarColor = (key) => {
 };
 
 export default CalorieCounter;
-

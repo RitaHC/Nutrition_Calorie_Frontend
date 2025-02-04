@@ -40,6 +40,9 @@ const alwaysOptions = (
 		<Nav.Item style={{ marginRight: '15px' }}>
 			<Link to='/' style={linkStyle}>Home</Link>
 		</Nav.Item>
+		<Nav.Item style={{ marginRight: '15px' }}>
+			<Link to='/calorie-counter' style={linkStyle}>Calorie Counter</Link>
+		</Nav.Item>
 	</>
 );
 
@@ -66,6 +69,5 @@ const Header = ({ user }) => (
 );
 
 export default Header;
-
 
 

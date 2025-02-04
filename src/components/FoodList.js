@@ -1,12 +1,16 @@
+
+// FoodList.js
 import React, { useEffect, useState } from 'react';
-import { allFood } from '../api/food';
+import { allFood } from '../api/food'; // Assume this API call fetches all food data
 import { Container, Row, Col, Button, ProgressBar, Modal } from "react-bootstrap";
+import SearchBar from './SearchBar'; // Import SearchBar component
 
 const FoodList = () => {
     const [foods, setFoods] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedFood, setSelectedFood] = useState(null);
     const [show, setShow] = useState(false);
+    const [searchQuery, setSearchQuery] = useState(''); // State for search query
 
     useEffect(() => {
         const fetchFood = async () => {
@@ -20,12 +24,21 @@ const FoodList = () => {
         fetchFood();
     }, []);
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
     const handleShow = (food) => {
         setSelectedFood(food);
-        setShow(true);
+        setShow(true); // Show the modal
     };
 
     const handleClose = () => setShow(false);
+
+    // Filter foods based on the search query
+    const filteredFoods = foods.filter(food =>
+        food.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     if (loading) return <p>Loading...</p>;
 
@@ -33,36 +46,26 @@ const FoodList = () => {
         <Container className="mt-4">
             <h2 className="text-center mb-4">Food List</h2>
 
-            
+            {/* Use the SearchBar Component */}
+            <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
 
             {/* Display Food Items in 3 Columns */}
-            {foods.map((food, index) => (
-                index % 3 === 0 && (
-                    <Row key={index} className="py-2 border-bottom">
-                        <Col xs={4} className="text-center">
-                            {foods[index] && (
-                                <Button variant="link" onClick={() => handleShow(foods[index])}>
-                                    {foods[index].name.toUpperCase()}
-                                </Button>
-                            )}
+            {filteredFoods.length > 0 ? (
+                <Row>
+                    {filteredFoods.map((food, index) => (
+                        <Col key={index} xs={4} className="text-center">
+                            <Button 
+                                variant="link" 
+                                onClick={() => handleShow(food)} // On click, show the modal with food details
+                            >
+                                {food.name.toUpperCase()}
+                            </Button>
                         </Col>
-                        <Col xs={4} className="text-center">
-                            {foods[index + 1] && (
-                                <Button variant="link" onClick={() => handleShow(foods[index + 1])}>
-                                    {foods[index + 1].name.toUpperCase()}
-                                </Button>
-                            )}
-                        </Col>
-                        <Col xs={4} className="text-center">
-                            {foods[index + 2] && (
-                                <Button variant="link" onClick={() => handleShow(foods[index + 2])}>
-                                    {foods[index + 2].name.toUpperCase()}
-                                </Button>
-                            )}
-                        </Col>
-                    </Row>
-                )
-            ))}
+                    ))}
+                </Row>
+            ) : (
+                <p>No results found</p>
+            )}
 
             {/* Pop-up Modal */}
             <Modal show={show} onHide={handleClose}>
@@ -72,8 +75,10 @@ const FoodList = () => {
                 <Modal.Body>
                     {selectedFood && (
                         <>
-                            <h4 style={{ color: `#${Math.floor(Math.random() * 16777215).toString(12)}` }}>{selectedFood.name.toUpperCase()}</h4>
-                            <p><strong>Serving Size:</strong> {selectedFood.serving_size_g} g </p>
+                            <h4 style={{ color: `#${Math.floor(Math.random() * 16777215).toString(12)}` }}>
+                                {selectedFood.name.toUpperCase()}
+                            </h4>
+                            <p><strong>Serving Size:</strong> {selectedFood.serving_size_g} g</p>
 
                             {/* Iterate through the food's nutritional data */}
                             {Object.entries(selectedFood).map(([key, value]) => {
@@ -106,11 +111,9 @@ const FoodList = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-*
         </Container>
     );
 };
-
 
 const getBarColor = (key) => {
     const colors = {
