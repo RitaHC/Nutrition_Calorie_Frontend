@@ -87,9 +87,9 @@ const App = () => {
 						deleteAlert={deleteAlert}
 					/>
 					))}
-				<h1>Food Items</h1>
 				
-            	<FoodList />
+				
+            	
 				
 
 			</Fragment>
