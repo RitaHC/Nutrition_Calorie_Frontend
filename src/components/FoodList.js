@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { allFood } from '../api/food';
-
-import { Container, Row, Col } from "react-bootstrap";
-import { Modal, Button } from "react-bootstrap"
+import { Container, Row, Col, Button, ProgressBar, Modal } from "react-bootstrap";
 
 const FoodList = () => {
     const [foods, setFoods] = useState([]);
@@ -27,15 +25,6 @@ const FoodList = () => {
         setShow(true);
     };
 
-    // Add Colorful Bars to the elements
-        const getBarStyle = (value, color) => ({
-          width: `${Math.min(value, 100)}%`, // Cap width at 100%
-          backgroundColor: color,
-          height: '20px',
-          borderRadius: '5px',
-          margin: '5px 0',
-        });
-
     const handleClose = () => setShow(false);
 
     if (loading) return <p>Loading...</p>;
@@ -45,7 +34,6 @@ const FoodList = () => {
             <h2 className="text-center mb-4">Food List</h2>
 
             {/* Grid Header */}
-           
 
             {/* Display Food Items in 3 Columns */}
             {foods.map((food, index) => (
@@ -76,7 +64,6 @@ const FoodList = () => {
                 )
             ))}
 
-
             {/* Pop-up Modal */}
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -85,27 +72,31 @@ const FoodList = () => {
                 <Modal.Body>
                     {selectedFood && (
                         <>
-                            <h4 style={{color: `#${Math.floor(Math.random()*16777215).toString(16)}` }}>{selectedFood.name.toUpperCase()}</h4>
-                            <p></p>
-                            <p><strong>Serving Size:</strong > {selectedFood.serving_size_g} g </p>
-                            <p><strong>Calories:</strong> {selectedFood.calories} kcal</p>
-                            <div style={getBarStyle(selectedFood.calories, 'darkred')}></div>
-                            <p><strong>Protein (in g):</strong> {selectedFood.protein_g}</p>
-                            <div style={getBarStyle(selectedFood.protein_g, 'darkgreen')}></div>
-                            <p><strong>Carbohydrates (in g):</strong> {selectedFood.carbohydrates_total_g}</p>
-                            <div style={getBarStyle(selectedFood.carbohydrates_total_g, 'olivedrab')}></div>
-                            <p><strong>Fat (in g):</strong> {selectedFood.fat_total_g}</p>
-                            <div style={getBarStyle(selectedFood.fat_total_g, 'darkolivegreen')}></div>
-                            <p><strong>Fiber (in g):</strong> {selectedFood.fiber_g}</p>
-                            <div style={getBarStyle(selectedFood.fiber_g, 'chartreuse')}></div>
-                            <p><strong>Sugar (in g):</strong> {selectedFood.sugar_g} </p>
-                            <div style={getBarStyle(selectedFood.sugar_g, 'lightseagreen')}></div>
-                            <p><strong>Sodium (in g):</strong> {selectedFood.sodium_mg} </p>
-                            <div style={getBarStyle(selectedFood.sodium_mg, 'mediumvioletred')}></div>
-                            <p><strong>Potassium (in g):</strong> {selectedFood.potassium_mg * 0.001}</p>
-                            <div style={getBarStyle(selectedFood.potassium_mg * 0.001, 'darkseagreen')}></div>
-                            <p><strong>Cholestrol (in g):</strong> {selectedFood.cholesterol_mg * 0.001} </p>
-                            <div style={getBarStyle(selectedFood.cholesterol_mg * 0.001, 'darkorange')}></div>
+                            <h4 style={{ color: `#${Math.floor(Math.random() * 16777215).toString(16)}` }}>{selectedFood.name.toUpperCase()}</h4>
+                            <p><strong>Serving Size:</strong> {selectedFood.serving_size_g} g </p>
+
+                            {/* Iterate through the food's nutritional data */}
+                            {Object.entries(selectedFood).map(([key, value]) => {
+                                if (key === "name" || key === "serving_size_g") return null; // Skip non-nutritional data
+                                
+                                const label = key.replace('_', ' ').toUpperCase();
+                                const isMg = key.includes('mg');
+                                const barValue = isMg ? value / 1000 : value; // Convert mg to g if necessary
+                                const maxNutritionValue = 100; // We assume 100 as the maximum value for progress bar
+
+                                return (
+                                    <div key={key} className="my-3">
+                                        <p className="mb-1"><strong>{label}:</strong> {value} {isMg ? 'mg' : 'g'}</p>
+                                        <ProgressBar
+                                            now={(barValue / maxNutritionValue) * 100}
+                                            striped
+                                            variant={getBarColor(key)}
+                                            label={`${Math.round((barValue / maxNutritionValue) * 100)}%`}
+                                            style={{ height: '20px', borderRadius: '5px' }}
+                                        />
+                                    </div>
+                                );
+                            })}
                         </>
                     )}
                 </Modal.Body>
@@ -115,8 +106,25 @@ const FoodList = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
         </Container>
     );
+};
+
+
+const getBarColor = (key) => {
+    const colors = {
+        calories: "danger",
+        protein_g: "success",
+        carbohydrates_total_g: "primary",
+        fat_total_g: "warning",
+        fiber_g: "info",
+        sugar_g: "danger",
+        sodium_mg: "dark",
+        potassium_mg: "primary",
+        cholesterol_mg: "danger",
+    };
+    return colors[key] || "secondary";
 };
 
 export default FoodList;
