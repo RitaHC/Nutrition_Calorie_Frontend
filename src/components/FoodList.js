@@ -33,7 +33,7 @@ const FoodList = () => {
         <Container className="mt-4">
             <h2 className="text-center mb-4">Food List</h2>
 
-            {/* Grid Header */}
+            
 
             {/* Display Food Items in 3 Columns */}
             {foods.map((food, index) => (
@@ -72,7 +72,7 @@ const FoodList = () => {
                 <Modal.Body>
                     {selectedFood && (
                         <>
-                            <h4 style={{ color: `#${Math.floor(Math.random() * 16777215).toString(16)}` }}>{selectedFood.name.toUpperCase()}</h4>
+                            <h4 style={{ color: `#${Math.floor(Math.random() * 16777215).toString(12)}` }}>{selectedFood.name.toUpperCase()}</h4>
                             <p><strong>Serving Size:</strong> {selectedFood.serving_size_g} g </p>
 
                             {/* Iterate through the food's nutritional data */}
@@ -88,11 +88,11 @@ const FoodList = () => {
                                     <div key={key} className="my-3">
                                         <p className="mb-1"><strong>{label}:</strong> {value} {isMg ? 'mg' : 'g'}</p>
                                         <ProgressBar
-                                            now={(barValue / maxNutritionValue) * 100}
+                                            now={(barValue / maxNutritionValue) * 1000}
                                             striped
                                             variant={getBarColor(key)}
                                             label={`${Math.round((barValue / maxNutritionValue) * 100)}%`}
-                                            style={{ height: '20px', borderRadius: '5px' }}
+                                            style={{ height: '20px', width: '100%', borderRadius: '5px' }}
                                         />
                                     </div>
                                 );
@@ -106,7 +106,7 @@ const FoodList = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
+*
         </Container>
     );
 };
