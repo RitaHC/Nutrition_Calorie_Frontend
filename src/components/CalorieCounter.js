@@ -1,12 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { allFood } from '../api/food';
-import { Container, Row, Col, Button, ProgressBar } from "react-bootstrap";
+import { Container, Row, Col, Button, ProgressBar, Form, Tabs, Tab, Card } from "react-bootstrap";
 
 const CalorieCounter = () => {
     const [foods, setFoods] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedFoods, setSelectedFoods] = useState({});
+    const [servingSizes, setServingSizes] = useState({});
 
     useEffect(() => {
         const fetchFood = async () => {
@@ -20,25 +21,23 @@ const CalorieCounter = () => {
         fetchFood();
     }, []);
 
-    const updateFoodCount = (food, change) => {
-        setSelectedFoods((prev) => {
-            const currentCount = prev[food.name]?.count || 0;
-            const newCount = currentCount + change;
+    const updateServingSize = (food, size) => {
+        setServingSizes((prev) => ({
+            ...prev,
+            [food.name]: size,
+        }));
 
-            if (newCount <= 0) {
-                const { [food.name]: _, ...rest } = prev;
-                return rest;
-            }
-
-            return {
-                ...prev,
-                [food.name]: { ...food, count: newCount }
-            };
-        });
+        setSelectedFoods((prev) => ({
+            ...prev,
+            [food.name]: food,
+        }));
     };
 
-    const totalNutrition = Object.values(selectedFoods).reduce((totals, food) => {
-        const multiplier = food.count;
+    const totalNutrition = Object.keys(selectedFoods).reduce((totals, foodName) => {
+        const food = selectedFoods[foodName];
+        const size = servingSizes[foodName] || 100;
+        const multiplier = size / 100;
+
         return {
             calories: totals.calories + food.calories * multiplier,
             protein_g: totals.protein_g + food.protein_g * multiplier,
@@ -46,9 +45,9 @@ const CalorieCounter = () => {
             fat_total_g: totals.fat_total_g + food.fat_total_g * multiplier,
             fiber_g: totals.fiber_g + food.fiber_g * multiplier,
             sugar_g: totals.sugar_g + food.sugar_g * multiplier,
-            sodium_mg: totals.sodium_mg + food.sodium_mg * multiplier * 0.001,
-            potassium_mg: totals.potassium_mg + food.potassium_mg * multiplier * 0.001,
-            cholesterol_mg: totals.cholesterol_mg + food.cholesterol_mg * multiplier * 0.001,
+            sodium_mg: totals.sodium_mg + food.sodium_mg * multiplier,
+            potassium_mg: totals.potassium_mg + food.potassium_mg * multiplier,
+            cholesterol_mg: totals.cholesterol_mg + food.cholesterol_mg * multiplier,
         };
     }, {
         calories: 0,
@@ -62,90 +61,68 @@ const CalorieCounter = () => {
         cholesterol_mg: 0,
     });
 
-    const maxNutritionValue = Math.max(
-        totalNutrition.protein_g,
-        totalNutrition.carbohydrates_total_g,
-        totalNutrition.fat_total_g,
-        totalNutrition.fiber_g,
-        totalNutrition.sugar_g,
-        totalNutrition.sodium_mg,
-        totalNutrition.potassium_mg,
-        totalNutrition.cholesterol_mg
-    ) || 1;
-
     if (loading) return <p>Loading...</p>;
 
     return (
-        <Container className="mb-2">
-            <Row>
-                {/* Left Side: Food List */}
-                <Col md={6}>
-                    <h2 className="text-center mb-4">Food List</h2>
-                    {foods.map((food, index) => (
-                        index % 3 === 0 && (
-                            <Row key={index} className="py-2 border-bottom">
-                                {[foods[index], foods[index + 1], foods[index + 2]].map((item, idx) =>
-                                    item ? (
-                                        <Col key={idx} xs={4} className="text-center">
-                                            <div>
-                                                <Button variant="outline-warning" onClick={() => updateFoodCount(item, 1)}>
-                                                    {item.name.toUpperCase()}
+        <Container className="mb-4">
+            <Tabs defaultActiveKey="foodList" id="calorie-counter-tabs" className="mb-3">
+                <Tab eventKey="foodList" title="Food List">
+                    <Row>
+                        <Col md={8} className="mx-auto">
+                            <h2 className="text-center mb-4">Food List</h2>
+                            <Row className="g-3">
+                                {foods.map((food, index) => (
+                                    <Col md={4} key={index}>
+                                        <Card className="shadow-sm border-0">
+                                            <Card.Body className="text-center">
+                                                <Card.Title className="mb-2 text-uppercase">{food.name}</Card.Title>
+                                                <Button 
+                                                    variant="warning" 
+                                                    className="w-100" 
+                                                    onClick={() => updateServingSize(food, servingSizes[food.name] || 100)}
+                                                >
+                                                    Add Portion (g)
                                                 </Button>
-                                            </div>
-                                            {selectedFoods[item.name] && (
-                                                <div className="mt-2">
-                                                    <Button variant="outline-danger" size="sm" onClick={() => updateFoodCount(item, -1)}>
-                                                        -
-                                                    </Button>
-                                                    <span className="mx-2">{selectedFoods[item.name]?.count} servings</span>
-                                                    <Button variant="outline-success" size="sm" onClick={() => updateFoodCount(item, 1)}>
-                                                        +
-                                                    </Button>
-                                                </div>
-                                            )}
-                                        </Col>
-                                    ) : null
-                                )}
+                                                {selectedFoods[food.name] && (
+                                                    <div className="mt-3">
+                                                        <Form.Control 
+                                                            type="number" 
+                                                            min="1" 
+                                                            value={servingSizes[food.name] || 100} 
+                                                            onChange={(e) => updateServingSize(food, parseInt(e.target.value) || 1)} 
+                                                        />
+                                                        <span className="d-block mt-1">grams</span>
+                                                    </div>
+                                                )}
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                ))}
                             </Row>
-                        )
-                    ))}
-                </Col>
-
-                {/* Right Side: Total Nutrition Overview (Sticky) */}
-                <Col md={6} className="sticky-nutrition">
-                    <h4 className="text-center">Total Nutrition Overview</h4>
-                    {/* Progress Bars for Total Nutritional Values */}
-                    <div className="my-3">
-                        {Object.entries(totalNutrition).map(([key, value]) => (
-                            <div key={key} className="mb-2">
-                                <p className="mb-1"><strong>{key.replace('_', ' ').toUpperCase()}:</strong> {value} {key.includes('mg') ? 'mg' : 'g'}</p>
-                                <ProgressBar
-                                    now={(value / maxNutritionValue) * 100}
-                                    striped variant={getBarColor(key)}
-                                    label={`${Math.round((value / maxNutritionValue) * 100)}%`}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </Col>
-            </Row>
+                        </Col>
+                    </Row>
+                </Tab>
+                <Tab eventKey="nutritionOverview" title="Nutrition Overview">
+                    <Col md={6} className="mx-auto">
+                        <h4 className="text-center">Total Nutrition Overview</h4>
+                        <div className="my-3">
+                            {Object.entries(totalNutrition).map(([key, value]) => (
+                                <div key={key} className="mb-2">
+                                    <p className="mb-1"><strong>{key.replace('_', ' ').toUpperCase()}:</strong> {value.toFixed(2)} {key.includes('mg') ? 'mg' : 'g'}</p>
+                                    <ProgressBar
+                                        now={value > 0 ? (value / 100) * 100 : 0}
+                                        striped
+                                        variant="success"
+                                        label={`${Math.round(value)}%`}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </Col>
+                </Tab>
+            </Tabs>
         </Container>
     );
-};
-
-// Function to get different colors for each nutrient type
-const getBarColor = (key) => {
-    const colors = {
-        protein_g: "success",
-        carbohydrates_total_g: "primary",
-        fat_total_g: "warning",
-        fiber_g: "info",
-        sugar_g: "danger",
-        sodium_mg: "dark",
-        potassium_mg: "primary",
-        cholesterol_mg: "danger",
-    };
-    return colors[key] || "secondary";
 };
 
 export default CalorieCounter;
