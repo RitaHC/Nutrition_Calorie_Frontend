@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { allFood } from '../api/food';
 import { Container, Row, Col, Button, ProgressBar, Form, Tabs, Tab, Card } from "react-bootstrap";
@@ -45,9 +44,9 @@ const CalorieCounter = () => {
             fat_total_g: totals.fat_total_g + food.fat_total_g * multiplier,
             fiber_g: totals.fiber_g + food.fiber_g * multiplier,
             sugar_g: totals.sugar_g + food.sugar_g * multiplier,
-            sodium_mg: totals.sodium_mg + food.sodium_mg * multiplier,
-            potassium_mg: totals.potassium_mg + food.potassium_mg * multiplier,
-            cholesterol_mg: totals.cholesterol_mg + food.cholesterol_mg * multiplier,
+            sodium_mg: totals.sodium_mg + food.sodium_mg * multiplier *0.001,
+            potassium_mg: totals.potassium_mg + food.potassium_mg * multiplier *0.001,
+            cholesterol_mg: totals.cholesterol_mg + food.cholesterol_mg * multiplier *0.001,
         };
     }, {
         calories: 0,
@@ -62,6 +61,21 @@ const CalorieCounter = () => {
     });
 
     if (loading) return <p>Loading...</p>;
+
+    const getProgressBarVariant = (key) => {
+        const variants = {
+            calories: "danger",
+            protein_g: "success",
+            carbohydrates_total_g: "success",
+            fat_total_g: "warning",
+            fiber_g: "success",
+            sugar_g: "warning",
+            sodium_mg: "warning",
+            potassium_mg: "success",
+            cholesterol_mg: "warning",
+        };
+        return variants[key] || "secondary";
+    };
 
     return (
         <Container className="mb-4">
@@ -108,11 +122,11 @@ const CalorieCounter = () => {
                         <div className="my-3">
                             {Object.entries(totalNutrition).map(([key, value]) => (
                                 <div key={key} className="mb-2">
-                                    <p className="mb-1"><strong>{key.replace('_', ' ').toUpperCase()}:</strong> {value.toFixed(2)} {key.includes('mg') ? 'mg' : 'g'}</p>
+                                    <p className="mb-1"><strong>{key.replace('_', ' ').toUpperCase()}:</strong> {value.toFixed(2)} {key.includes('mg') ? 'mg' : key === 'calories' ? '' : 'g'}</p>
                                     <ProgressBar
                                         now={value > 0 ? (value / 100) * 100 : 0}
                                         striped
-                                        variant="success"
+                                        variant={getProgressBarVariant(key)}
                                         label={`${Math.round(value)}%`}
                                     />
                                 </div>
