@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { allFood } from '../api/food';
 import { Container, Row, Col, Button, ProgressBar, Form, Tabs, Tab, Card } from "react-bootstrap";
 
+// All useState elements
 const CalorieCounter = () => {
     const [foods, setFoods] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedFoods, setSelectedFoods] = useState({});
     const [servingSizes, setServingSizes] = useState({});
 
+
     useEffect(() => {
+        // Fetch data from API and store it in foods
         const fetchFood = async () => {
+            // Add loading element
             const data = await allFood();
             if (data) {
                 setFoods(data);
@@ -17,9 +21,11 @@ const CalorieCounter = () => {
             setLoading(false);
         };
 
+        // Call fetchFood function
         fetchFood();
     }, []);
 
+    // Update serving size 
     const updateServingSize = (food, size) => {
         setServingSizes((prev) => ({
             ...prev,
@@ -32,6 +38,7 @@ const CalorieCounter = () => {
         }));
     };
 
+    // Calculate the total nutrition value [Convert Object to Array]
     const totalNutrition = Object.keys(selectedFoods).reduce((totals, foodName) => {
         const food = selectedFoods[foodName];
         const size = servingSizes[foodName] || 100;

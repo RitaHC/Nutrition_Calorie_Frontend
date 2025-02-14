@@ -16,6 +16,7 @@ import SignOut from './components/auth/SignOut'
 import ChangePassword from './components/auth/ChangePassword'
 import FoodList from './components/FoodList'
 import CalorieCounter from './components/CalorieCounter';
+import AllFood from './components/AllFood';
 const App = () => {
 
   const [user, setUser] = useState(null)
@@ -68,6 +69,10 @@ const App = () => {
 					<Route
 						path='/calorie-counter'
 						element={<CalorieCounter/>}
+					/>
+					<Route
+					path='/allFood'
+					element={<AllFood/>}
 					/>
 					<Route
 						path='/change-password'

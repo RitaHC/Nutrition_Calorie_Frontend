@@ -2,6 +2,8 @@ import React, { Fragment } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
+import CalorieCounter from '../CalorieCounter'
+
 const linkStyle = {
     color: 'white',
     textDecoration: 'none'
@@ -31,6 +33,9 @@ const unauthenticatedOptions = (
 		</Nav.Item>
 		<Nav.Item style={{ marginRight: '15px' }}>
 			<Link to='calorie-counter' style={linkStyle}>Count Calories</Link>
+		</Nav.Item>
+		<Nav.Item style={{ marginRight: '15px' }}>
+			<Link to='allFood' style={linkStyle}>All Food</Link>
 		</Nav.Item>
 	</>
 );
