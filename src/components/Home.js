@@ -1,7 +1,4 @@
-import FoodList from "./FoodList"
-
-
-
+import Display from "./Display"
 
 const Home = (props) => {
 	// const { msgAlert, user } = props
@@ -9,10 +6,10 @@ const Home = (props) => {
 
 	return (
 		<>
-			<h2>Home Page</h2>
-		
-			{/* <FoodList/> */}
-			<h1>Hello World</h1>
+			
+			<Display/>
+			
+			
 		</>
 			
 		
